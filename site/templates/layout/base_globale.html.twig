@@ -1,0 +1,14 @@
+{# templates/layout/base_globale.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Vente en Ligne{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('css/global.css') }}"> {# Feuille CSS Niveau 1#}
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+{% block body %}{% endblock %}
+{% block javascripts %}{% endblock %}
+</body>
+</html>

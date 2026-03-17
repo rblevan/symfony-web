@@ -1,0 +1,62 @@
+{# templates/layout/site_layout.html.twig #}
+{% extends 'layout/base_globale.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/site.css') }}"> {# Feuille CSS Niveau 2  #}
+{% endblock %}
+
+{% block body %}
+    <header style="position: fixed; top: 0; width: 100%; background: #eee;"> {# Bandeau supérieur fixe #}
+        <p>
+            {% if app.user %}
+                Connecté en tant que {{ app.user.prenom }} {{ app.user.nom }}
+                ({% if is_granted('ROLE_SUPER_ADMIN') %}Super-Administrateur
+            {% elseif is_granted('ROLE_ADMIN') %}Administrateur
+            {% else %}Client{% endif %})
+            {% else %}
+                Visiteur non authentifié [cite: 96]
+            {% endif %}
+        </p>
+    </header>
+
+    <nav style="margin-top: 60px;"> {# Menu s'adaptant au profil  #}
+        <ul>
+            <li><a href="{{ path('app_accueil') }}">Accueil</a></li>
+
+            {% if not app.user %}
+                <li><a href="{{ path('app_login') }}">Connexion</a></li>
+                <li><a href="{{ path('app_register') }}">Créer un compte</a></li>
+            {% else %}
+                <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                <li><a href="{{ path('app_profile') }}">Gérer le profil</a></li>
+
+                {% if is_granted('ROLE_USER') and not is_granted('ROLE_SUPER_ADMIN') %}
+                    <li><a href="{{ path('app_produits') }}">Lister les produits</a></li>
+                    <li><a href="{{ path('app_panier') }}">Gérer le panier ({{ nbr_articles|default(0) }})</a> </li>
+                {% endif %}
+
+                {% if is_granted('ROLE_ADMIN') and not is_granted('ROLE_SUPER_ADMIN') %}
+                    <li><a href="{{ path('app_admin_clients') }}">Gérer les clients</a></li>
+                    <li><a href="{{ path('app_admin_produit_add') }}">Créer un produit</a></li>
+                    <li><a href="https://fr.wikipedia.org/wiki/Mass_Effect" target="_blank">Lien Mass Effect</a></li>
+                {% endif %}
+
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <li><a href="{{ path('app_sadmin_add_admin') }}">Créer un administrateur</a></li>
+                {% endif %}
+            {% endif %}
+        </ul>
+    </nav>
+
+    <main>
+        {% for message in app.flashes('success') %}
+            <div class="flash-success">{{ message }}</div>
+        {% endfor %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer style="position: fixed; bottom: 0; width: 100%;"> {# Pied de page fixe #}
+        <img src="{{ asset('images/footer.jpg') }}" alt="Logo" style="max-height: 50px;"> {# Image < 50 Ko  #}
+    </footer>
+{% endblock %}

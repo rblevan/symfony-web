@@ -1,0 +1,10 @@
+/* Uniquement pour la page d'accueil (Niveau 3) */
+.welcome-msg h1 {
+    color: #2c3e50;
+    background-color: #ecf0f1;
+}
+
+.user-status {
+    font-weight: bold;
+    color: #27ae60;
+}
