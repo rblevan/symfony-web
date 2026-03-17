@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -45,6 +47,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->paniers = new ArrayCollection();
     }
 
+    #[ORM\Column(length: 255)]
+    private ?string $nom = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $prenom = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTime $date_naissance = null;
+
+    #[ORM\ManyToOne]
+    private ?Pays $pays = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,7 +83,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->login;
+        return (string)$this->login;
     }
 
     /**
@@ -114,10 +128,46 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function __serialize(): array
     {
-        $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+        $data = (array)$this;
+        $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
 
         return $data;
+    }
+
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(string $prenom): static
+    {
+        $this->prenom = $prenom;
+
+        return $this;
+    }
+
+    public function getDateNaissance(): ?\DateTime
+    {
+        return $this->date_naissance;
+    }
+
+    public function setDateNaissance(\DateTime $date_naissance): static
+    {
+        $this->date_naissance = $date_naissance;
+
+        return $this;
+    }
+
+    public function getPays(): ?Pays
+    {
+        return $this->pays;
+    }
+
+    public function setPays(?Pays $pays): static
+    {
+        $this->pays = $pays;
+
+        return $this;
     }
 
     #[\Deprecated]
@@ -140,7 +190,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->paniers->add($panier);
             $panier->setUser($this);
         }
+        return $this;
+    }
 
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(string $nom): static
+    {
+        $this->nom = $nom;
         return $this;
     }
 
@@ -152,7 +212,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $panier->setUser(null);
             }
         }
-
         return $this;
     }
 }
