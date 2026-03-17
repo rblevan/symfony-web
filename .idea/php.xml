@@ -139,6 +139,8 @@
       <path value="$PROJECT_DIR$/site/vendor/myclabs/deep-copy" />
       <path value="$PROJECT_DIR$/site/vendor/staabm/side-effects-detector" />
       <path value="$PROJECT_DIR$/site/vendor/egulias/email-validator" />
+      <path value="$PROJECT_DIR$/site/vendor/doctrine/data-fixtures" />
+      <path value="$PROJECT_DIR$/site/vendor/doctrine/doctrine-fixtures-bundle" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2">

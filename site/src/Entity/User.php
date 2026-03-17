@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -31,6 +32,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $nom = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $prenom = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTime $date_naissance = null;
+
+    #[ORM\ManyToOne]
+    private ?Pays $pays = null;
 
     public function getId(): ?int
     {
@@ -111,5 +124,53 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials(): void
     {
         // @deprecated, to be removed when upgrading to Symfony 8
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(string $nom): static
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(string $prenom): static
+    {
+        $this->prenom = $prenom;
+
+        return $this;
+    }
+
+    public function getDateNaissance(): ?\DateTime
+    {
+        return $this->date_naissance;
+    }
+
+    public function setDateNaissance(\DateTime $date_naissance): static
+    {
+        $this->date_naissance = $date_naissance;
+
+        return $this;
+    }
+
+    public function getPays(): ?Pays
+    {
+        return $this->pays;
+    }
+
+    public function setPays(?Pays $pays): static
+    {
+        $this->pays = $pays;
+
+        return $this;
     }
 }
