@@ -1,0 +1,54 @@
+{% extends 'layout/site_layout.html.twig' %}
+
+{% block title %}Mon Panier{% endblock %}
+
+{% block content %}
+    <h1>Récapitulatif de votre panier</h1>
+
+    {% if app.user.paniers is empty %}
+        <p>Votre panier est vide.</p>
+    {% else %}
+        <table border="1" style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+            <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Prix Unitaire</th>
+                <th>Quantité</th>
+                <th>Total ligne</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% set total_general = 0 %}
+            {% for ligne in app.user.paniers %}
+                {% set total_ligne = ligne.product.prixUnitaire * ligne.quantite %}
+                {% set total_general = total_general + total_ligne %}
+                <tr>
+                    <td>{{ ligne.product.libelle }} </td>
+                    <td>{{ ligne.product.prixUnitaire }} € </td>
+                    <td>{{ ligne.quantite }} </td>
+                    <td>{{ total_ligne }} € </td>
+                    <td>
+                        {# Lien pour supprimer un produit spécifique [cite: 280, 288] #}
+                        <a href="{{ path('panier_supprimer', {'id': ligne.product.id}) }}">Supprimer</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div style="font-weight: bold; font-size: 1.2em; margin-bottom: 20px;">
+            Prix total : {{ total_general }} €
+        </div>
+
+        <div style="margin-top: 20px;">
+            {# Boutons d'actions globales [cite: 278, 279] #}
+            <a href="{{ path('panier_commander') }}" style="padding: 10px; background: green; color: white; text-decoration: none;">Commander</a>
+            <a href="{{ path('panier_vider') }}" style="padding: 10px; background: red; color: white; text-decoration: none; margin-left: 10px;">Vider</a>
+        </div>
+    {% endif %}
+
+    <p style="margin-top: 30px;">
+        <a href="{{ path('app_produits') }}">Retourner à la liste des produits</a>
+    </p>
+{% endblock %}
