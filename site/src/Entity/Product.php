@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ORM\Table(name: 'proj_product')]
@@ -17,10 +18,12 @@ class Product
     #[ORM\Column(length: 255)]
     private ?string $libelle = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'float')]
+    #[Assert\PositiveOrZero(message: "Le prix unitaire doit être positif ou nul.")]
     private ?float $prixUnitaire = null;
 
     #[ORM\Column]
+    #[Assert\PositiveOrZero(message: "La quantité en stock ne peut pas être négative.")]
     private ?int $quantiteStock = null;
 
     public function getId(): ?int
