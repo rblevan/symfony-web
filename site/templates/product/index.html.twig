@@ -11,40 +11,54 @@
 {% block content %}
     <h1>Nos Produits</h1>
 
-    {% for produit in produits %}
-        <div class="produit-ligne" style="margin-bottom: 10px; padding: 5px; border-bottom: 1px solid #ccc;">
-            <strong>{{ produit.libelle }}</strong> -
-            <span>{{ produit.prixUnitaire }} €</span> -
-            <span>En stock : {{ produit.quantiteStock }}</span>
+    <div class="liste-produits" style="display: flex; flex-wrap: wrap; gap: 20px;">
+        {% for produit in produits %}
+            <div class="produit-carte" style="border: 3px solid #333; padding: 15px; background: #f0f0f0; width: 250px; text-align: center;">
 
-            {# Récupération de la quantité déjà dans le panier pour ce produit #}
-            {% set qte_dans_panier = 0 %}
-            {% for ligne in app.user.paniers %}
-                {% if ligne.product.id == produit.id %}
-                    {% set qte_dans_panier = ligne.quantite %}
+                {# AFFICHAGE DE L'IMAGE #}
+                <div style="margin-bottom: 10px;">
+                    {% if produit.image %}
+                        <img src="{{ asset('images/' ~ produit.image) }}"
+                             alt="{{ produit.libelle }}"
+                             style="width: 64px; height: 64px; image-rendering: pixelated; border: 1px solid #000;">
+                    {% else %}
+                        <div style="width: 64px; height: 64px; background: #ccc; margin: auto; line-height: 64px; font-size: 10px;">Sans Image</div>
+                    {% endif %}
+                </div>
+
+                <div style="margin-bottom: 10px;">
+                    <strong>{{ produit.libelle }}</strong><br>
+                    <span style="color: green; font-weight: bold;">{{ produit.prixUnitaire }} €</span><br>
+                    <small>En stock : {{ produit.quantiteStock }}</small>
+                </div>
+
+                {# Récupération de la quantité dans le panier #}
+                {% set qte_dans_panier = 0 %}
+                {% for ligne in app.user.paniers %}
+                    {% if ligne.product.id == produit.id %}
+                        {% set qte_dans_panier = ligne.quantite %}
+                    {% endif %}
+                {% endfor %}
+
+                {% if produit.quantiteStock > 0 or qte_dans_panier > 0 %}
+                    <form action="{{ path('app_produits') }}" method="POST">
+                        <input type="hidden" name="id_produit" value="{{ produit.id }}">
+
+                        <label for="qte_{{ produit.id }}">Quantité :</label>
+                        <select name="quantite" id="qte_{{ produit.id }}">
+                            {% for i in 0..(qte_dans_panier + produit.quantiteStock) %}
+                                <option value="{{ i }}" {% if i == 0 %}selected{% endif %}>
+                                    {{ i }}
+                                </option>
+                            {% endfor %}
+                        </select>
+
+                        <button type="submit" style="margin-top: 10px; cursor: pointer;">ajouter au panier </button>
+                    </form>
+                {% else %}
+                    <p style="color: red; font-weight: bold;">Rupture de stock !</p>
                 {% endif %}
-            {% endfor %}
-
-            {# Condition d'affichage du formulaire [cite: 251-254] #}
-            {% if produit.quantiteStock > 0 or qte_dans_panier > 0 %}
-                <form action="{{ path('app_produits') }}" method="POST" style="display:inline;">
-                    <input type="hidden" name="id_produit" value="{{ produit.id }}">
-
-                    <select name="quantite">
-                        {# Le menu va de 0 à m + n [cite: 251] #}
-                        {% for i in 0..(qte_dans_panier + produit.quantiteStock) %}
-                            {# L'entrée présélectionnée doit être "0" [cite: 251] #}
-                            <option value="{{ i }}" {% if i == 0 %}selected{% endif %}>
-                                {{ i }}
-                            </option>
-                        {% endfor %}
-                    </select>
-
-                    <button type="submit">Modifier</button>
-                </form>
-            {% else %}
-                <span style="color: red;">(Indisponible)</span>
-            {% endif %}
-        </div>
-    {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

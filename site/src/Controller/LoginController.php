@@ -30,7 +30,7 @@ class LoginController extends AbstractController
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
-    #[Route(path: '/accueil', name: 'app_accueil')]
+    #[Route(path: '/accueil', name: 'app_login_check')]
     public function isLogged(): Response
     {
         return $this->render('accueil/index.html.twig');

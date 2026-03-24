@@ -3,7 +3,12 @@
 {% block title %}Mon Panier{% endblock %}
 
 {% block content %}
-    <h1>Récapitulatif de votre panier</h1>
+    {% set nbr_total = 0 %}
+    {% for ligne in app.user.paniers %}
+        {% set nbr_total = nbr_total + ligne.quantite %}
+    {% endfor %}
+
+    <h1>Récapitulatif de votre panier <strong>({{ nbr_total }})</strong></h1>
 
     {% if app.user.paniers is empty %}
         <p>Votre panier est vide.</p>
@@ -29,7 +34,7 @@
                     <td>{{ ligne.quantite }} </td>
                     <td>{{ total_ligne }} € </td>
                     <td>
-                        {# Lien pour supprimer un produit spécifique [cite: 280, 288] #}
+                        {# Lien pour supprimer un produit spécifique #}
                         <a href="{{ path('panier_supprimer', {'id': ligne.product.id}) }}">Supprimer</a>
                     </td>
                 </tr>
@@ -42,7 +47,7 @@
         </div>
 
         <div style="margin-top: 20px;">
-            {# Boutons d'actions globales [cite: 278, 279] #}
+            {# Boutons d'actions globales #}
             <a href="{{ path('panier_commander') }}" style="padding: 10px; background: green; color: white; text-decoration: none;">Commander</a>
             <a href="{{ path('panier_vider') }}" style="padding: 10px; background: red; color: white; text-decoration: none; margin-left: 10px;">Vider</a>
         </div>

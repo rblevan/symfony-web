@@ -1,0 +1,30 @@
+{% extends 'layout/site_layout.html.twig' %}
+
+{% block content %}
+    <h1>Modifier mon profil</h1>
+
+    <form method="post" style="max-width: 400px;">
+        <div style="margin-bottom: 15px;">
+            <label>Nom :</label>
+            <input type="text" name="nom" value="{{ user.nom }}" required style="width: 100%;">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label>Prénom :</label>
+            <input type="text" name="prenom" value="{{ user.prenom }}" required style="width: 100%;">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label>Nouveau mot de passe (laisser vide pour ne pas changer) :</label>
+            <input type="password" name="new_password" style="width: 100%;">
+        </div>
+
+        <div style="margin-bottom: 15px; padding: 15px; border: 2px solid #000; background: #fff5f5;">
+            <label><strong>Confirmation obligatoire</strong></label>
+            <p style="font-size: 0.85em; color: #d00;">Saisissez votre mot de passe ACTUEL pour valider :</p>
+            <input type="password" name="old_password" required style="width: 100%; border: 1px solid red;">
+        </div>
+
+        <button type="submit" style="padding: 10px 20px; cursor: pointer;">Enregistrer les modifications</button>
+    </form>
+{% endblock %}

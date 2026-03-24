@@ -14,7 +14,7 @@
             {% elseif is_granted('ROLE_ADMIN') %}Administrateur
             {% else %}Client{% endif %})
             {% else %}
-                Visiteur non authentifié [cite: 96]
+                Visiteur non authentifié
             {% endif %}
         </p>
     </header>
@@ -31,8 +31,12 @@
                 <li><a href="{{ path('app_profile') }}">Gérer le profil</a></li>
 
                 {% if is_granted('ROLE_USER') and not is_granted('ROLE_SUPER_ADMIN') %}
-                    <li><a href="{{ path('app_produits') }}">Lister les produits</a></li>
-                    <li><a href="{{ path('app_panier') }}">Gérer le panier ({{ nbr_articles|default(0) }})</a> </li>
+                    {% set nbr_total = 0 %}
+                    {% for ligne in app.user.paniers %}
+                        {% set nbr_total = nbr_total + ligne.quantite %}
+                    {% endfor %}
+                    <li><a href="{{ path('app_produits') }}">Liste de produits</a></li>
+                    <li><a href="{{ path('app_panier') }}">Gérer le panier <strong>({{ nbr_total }})</strong></a></li>
                 {% endif %}
 
                 {% if is_granted('ROLE_ADMIN') and not is_granted('ROLE_SUPER_ADMIN') %}
