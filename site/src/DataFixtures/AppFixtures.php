@@ -43,7 +43,8 @@ class AppFixtures extends Fixture
                 ->setRoles(['ROLE_SUPER_ADMIN'])
                 ->setNom('Admin')
                 ->setPrenom('Super')
-                ->setDateNaissance(new \DateTime('1980-01-01'));
+                ->setDateNaissance(new \DateTime('1980-01-01'))
+                ->setPays($france);
         $sadmin->setPassword($this->hasher->hashPassword($sadmin, 'nimbas'));
         $manager->persist($sadmin);
 
@@ -53,7 +54,8 @@ class AppFixtures extends Fixture
                 ->setRoles(['ROLE_ADMIN'])
                 ->setNom('Subrenat')
                 ->setPrenom('Gilles')
-                ->setDateNaissance(new \DateTime('1980-01-01'));
+                ->setDateNaissance(new \DateTime('1980-01-01'))
+                ->setPays($france);
         $gilles->setPassword($this->hasher->hashPassword($gilles, 'sellig'));
         $manager->persist($gilles);
 
@@ -63,7 +65,8 @@ class AppFixtures extends Fixture
                 ->setRoles(['ROLE_USER'])
                 ->setNom('Zrour')
                 ->setPrenom('Rita')
-                ->setDateNaissance(new \DateTime('1980-01-01'));
+                ->setDateNaissance(new \DateTime('1980-01-01'))
+                ->setPays($france);
         $rita->setPassword($this->hasher->hashPassword($rita, 'atir'));
         $manager->persist($rita);
 
@@ -73,7 +76,8 @@ class AppFixtures extends Fixture
                 ->setRoles(['ROLE_USER'])
                 ->setNom('XXX')
                 ->setPrenom('Mathieu')
-                ->setDateNaissance(new \DateTime('1980-01-01'));
+                ->setDateNaissance(new \DateTime('1980-01-01'))
+                ->setPays($france);
         $mathieu->setPassword($this->hasher->hashPassword($mathieu, 'ueihtam'));
         $manager->persist($mathieu);
 

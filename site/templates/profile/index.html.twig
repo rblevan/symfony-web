@@ -3,6 +3,12 @@
 {% block content %}
     <h1>Modifier mon profil</h1>
 
+    {% for message in app.flashes('danger') %}
+        <div style="color: red; padding: 10px; border: 1px solid red; margin-bottom: 15px;">
+            {{ message }}
+        </div>
+    {% endfor %}
+
     <form method="post" style="max-width: 400px;">
         <div style="margin-bottom: 15px;">
             <label>Nom :</label>
@@ -12,6 +18,17 @@
         <div style="margin-bottom: 15px;">
             <label>Prénom :</label>
             <input type="text" name="prenom" value="{{ user.prenom }}" required style="width: 100%;">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label>Pays :</label>
+            <select name="pays" required style="width: 100%; padding: 5px;">
+                {% for pays in les_pays %}
+                    <option value="{{ pays.id }}" {% if user.pays and user.pays.id == pays.id %}selected{% endif %}>
+                        {{ pays.nom }}
+                    </option>
+                {% endfor %}
+            </select>
         </div>
 
         <div style="margin-bottom: 15px;">

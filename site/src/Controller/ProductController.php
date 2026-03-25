@@ -22,29 +22,29 @@ final class ProductController extends AbstractController
     ): Response {
         $user = $this->getUser();
 
-        // Sécurité : seul un client peut lister les produits
-        if (!$user || $this->isGranted('ROLE_SUPER_ADMIN')) {
+        if ($this->isGranted('ROLE_SUPER_ADMIN')) {
             return $this->redirectToRoute('app_accueil');
         }
 
-        $produits = $prodRepo->findAll();
-
-        // Traitement du formulaire POST
         if ($request->isMethod('POST')) {
+
+            // visiteur non connecté ajout panier -> login
+            if (!$user) {
+                $this->addFlash('error', 'Vous devez être connecté pour ajouter des articles au panier.');
+                return $this->redirectToRoute('app_login');
+            }
+
             $idProduit = $request->request->get('id_produit');
             $nouvelleQt = (int)$request->request->get('quantite');
             $produit = $prodRepo->find($idProduit);
 
             if ($produit) {
-                // Récupérer l'ancienne quantité dans le panier pour ce produit
                 $lignePanier = $panierRepo->findOneBy(['user' => $user, 'product' => $produit]);
                 $ancienneQt = $lignePanier ? $lignePanier->getQuantite() : 0;
 
-                // Calcul de la variation pour ajuster le stock
                 $difference = $nouvelleQt - $ancienneQt;
                 $produit->setQuantiteStock($produit->getQuantiteStock() - $difference);
 
-                // Gestion de la ligne de panier
                 if ($nouvelleQt <= 0) {
                     if ($lignePanier) {
                         $em->remove($lignePanier);
@@ -58,16 +58,16 @@ final class ProductController extends AbstractController
                     $lignePanier->setQuantite($nouvelleQt);
                     $em->persist($lignePanier);
                 }
-
                 $em->flush();
                 $this->addFlash('success', 'Panier mis à jour.');
             }
-
-            // Après validation, on reste sur la même page
             return $this->redirectToRoute('app_produits');
         }
 
-        return $this->render('product/index.html.twig', [
+        // visiteur / client
+        $produits = $prodRepo->findAll();
+
+        return $this->render('product/add_product.html.twig', [
             'produits' => $produits,
         ]);
     }

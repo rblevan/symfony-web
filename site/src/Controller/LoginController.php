@@ -33,6 +33,6 @@ class LoginController extends AbstractController
     #[Route(path: '/accueil', name: 'app_login_check')]
     public function isLogged(): Response
     {
-        return $this->render('accueil/index.html.twig');
+        return $this->render('accueil/add_product.html.twig');
     }
 }

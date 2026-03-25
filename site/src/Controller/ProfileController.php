@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\PaysRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,49 +14,58 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ProfileController extends AbstractController
 {
     #[Route('/profile', name: 'app_profile')]
-    public function index(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $hasher): Response
+    public function index(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $hasher, PaysRepository $paysRepo): Response
     {
         /** @var User $user */
         $user = $this->getUser();
+
+        if (!$user) {
+            $this->addFlash('danger', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
 
         if ($request->isMethod('POST')) {
             $oldPassword = $request->request->get('old_password');
             $newPassword = $request->request->get('new_password');
 
-            // 1. Vérification obligatoire de l'ancien mot de passe
             if (!$hasher->isPasswordValid($user, $oldPassword)) {
                 $this->addFlash('danger', 'Ancien mot de passe incorrect.');
                 return $this->redirectToRoute('app_profile');
             }
 
-            // 2. Mise à jour des informations de base
             $user->setNom($request->request->get('nom'));
             $user->setPrenom($request->request->get('prenom'));
 
-            // 3. Gestion du nouveau mot de passe (si rempli)
+            $idNouveauPays = $request->request->get('pays');
+            if ($idNouveauPays) {
+                $nouveauPays = $paysRepo->find($idNouveauPays);
+                if ($nouveauPays) {
+                    $user->setPays($nouveauPays);
+                }
+            }
+
             if (!empty($newPassword)) {
-                // Règle de gestion : Interdiction de mettre le login comme mot de passe
                 if ($newPassword === $user->getLogin()) {
                     $this->addFlash('danger', 'Le mot de passe ne peut pas être votre login.');
                     return $this->redirectToRoute('app_profile');
                 }
-
-                // Hachage du nouveau mot de passe
                 $hashedPassword = $hasher->hashPassword($user, $newPassword);
                 $user->setPassword($hashedPassword);
             }
 
             $em->flush();
-            $this->addFlash('success', 'Profil mis à jour !');
+            $this->addFlash('success', 'Profil mis à jour avec succès !');
 
-            // Redirection selon le rôle
             return $this->isGranted('ROLE_SUPER_ADMIN')
                 ? $this->redirectToRoute('app_accueil')
                 : $this->redirectToRoute('app_produits');
         }
 
-        return $this->render('profile/index.html.twig', [
+        $tousLesPays = $paysRepo->findAll();
+
+        return $this->render('profile/add_product.html.twig', [
             'user' => $user,
+            'les_pays' => $tousLesPays,
         ]);
     }
 }

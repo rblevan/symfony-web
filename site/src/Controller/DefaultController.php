@@ -31,7 +31,7 @@ class DefaultController extends AbstractController
             }
         }
 
-        return $this->render('accueil/index.html.twig', [
+        return $this->render('accueil/add_product.html.twig', [
             'statut' => $statut,
             'pays' => $pays,
         ]);

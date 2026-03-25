@@ -4,7 +4,6 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {# Tu peux ajouter un CSS spécifique ici si besoin #}
     <link rel="stylesheet" href="{{ asset('css/site.css') }}">
 {% endblock %}
 
@@ -32,13 +31,15 @@
                     <small>En stock : {{ produit.quantiteStock }}</small>
                 </div>
 
-                {# Récupération de la quantité dans le panier #}
                 {% set qte_dans_panier = 0 %}
-                {% for ligne in app.user.paniers %}
-                    {% if ligne.product.id == produit.id %}
-                        {% set qte_dans_panier = ligne.quantite %}
-                    {% endif %}
-                {% endfor %}
+
+                {% if app.user %}
+                    {% for ligne in app.user.paniers %}
+                        {% if ligne.product.id == produit.id %}
+                            {% set qte_dans_panier = ligne.quantite %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
 
                 {% if produit.quantiteStock > 0 or qte_dans_panier > 0 %}
                     <form action="{{ path('app_produits') }}" method="POST">

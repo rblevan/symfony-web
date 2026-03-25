@@ -1,0 +1,17 @@
+{% extends 'layout/site_layout.html.twig' %}
+
+{% block content %}
+    <h1>Ajouter un nouveau produit (Zone Admin)</h1>
+
+    <div style="max-width: 600px; padding: 20px; border: 1px solid #ccc; background: #f9f9f9;">
+        {{ form_start(form) }}
+
+        {{ form_widget(form) }}
+
+        <button type="submit" style="margin-top: 20px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">
+            Ajouter le produit
+        </button>
+
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
