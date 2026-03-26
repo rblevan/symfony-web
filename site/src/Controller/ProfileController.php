@@ -63,7 +63,7 @@ final class ProfileController extends AbstractController
 
         $tousLesPays = $paysRepo->findAll();
 
-        return $this->render('profile/add_product.html.twig', [
+        return $this->render('profile/index.html.twig', [
             'user' => $user,
             'les_pays' => $tousLesPays,
         ]);

@@ -1,0 +1,1 @@
+ce fichier sert uniquement a ne pas perdre notre dossier bd_projet lors des push et pull de git

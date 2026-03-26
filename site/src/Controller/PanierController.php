@@ -18,7 +18,7 @@ final class PanierController extends AbstractController
             return $this->redirectToRoute('app_accueil');
         }
 
-        return $this->render('panier/add_product.html.twig');
+        return $this->render('panier/index.html.twig');
     }
 
     #[Route('/panier/vider', name: 'panier_vider')]
