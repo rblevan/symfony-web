@@ -43,7 +43,7 @@ final class AdminController extends AbstractController
 
 
     // pour les clients
-    #[Route('/clients', name: 'clients')]
+    #[Route('/clients', name: 'manage_clients')]
     public function listClients(UserRepository $userRepo): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
@@ -51,7 +51,7 @@ final class AdminController extends AbstractController
         }
         $users = $userRepo->findAll();
 
-        return $this->render('admin/clients.html.twig', [
+        return $this->render('admin/manage_clients.html.twig', [
             'users' => $users,
         ]);
     }
@@ -76,6 +76,6 @@ final class AdminController extends AbstractController
             $this->addFlash('success', 'Le compte de '.$client->getPrenom().' a bien été supprimé.');
         }
 
-        return $this->redirectToRoute('app_admin_clients');
+        return $this->redirectToRoute('app_admin_manage_clients');
     }
 }
