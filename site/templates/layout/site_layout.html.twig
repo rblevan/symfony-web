@@ -19,7 +19,7 @@
         </p>
     </header>
 
-    <nav style="margin-top: 60px;"> {# Menu s'adaptant au profil  #}
+    <nav style="margin-top: 60px;">
 
         <ul>
             <li><a href="{{ path('app_accueil') }}">Accueil</a></li>
@@ -52,7 +52,7 @@
                     {% if is_granted('ROLE_ADMIN') %}
                         {# 4. ADMINISTRATEUR UNIQUEMENT (Droits client + gestion clients) #}
                         <li style="border-top: 1px solid #ccc; margin-top: 5px;"><strong>Espace Admin</strong></li>
-                        {# <li><a href="{{ path('app_admin_manage_clients') }}">Gérer les clients</a></li>#}
+                        <li><a href="{{ path('app_admin_manage_clients') }}">Gérer les clients</a></li>
                         <li><a href="{{ path('app_admin_produit_add') }}">Ajouter un produit</a></li>
                     {% endif %}
 
