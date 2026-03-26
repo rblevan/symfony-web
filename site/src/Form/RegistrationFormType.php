@@ -2,6 +2,8 @@
 
 namespace App\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Pays;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -22,6 +24,13 @@ class RegistrationFormType extends AbstractType
             ->add('prenom')
             ->add('date_naissance', null, [
                 'widget' => 'single_text',
+            ])
+            ->add('pays', EntityType::class, [
+                'class' => Pays::class,
+                'choice_label' => 'nom',
+                'label' => 'Pays d\'origine',
+                'placeholder' => 'Sélectionnez votre pays',
+                'required' => true,
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
