@@ -9,10 +9,12 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Pays>
  */
+// (Evan) extends "ServiceEntityRepository" donc findAll(), find($id), ou findBy().
 class PaysRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
+        // (Evan) construct relie ce repository à Pays
         parent::__construct($registry, Pays::class);
     }
 

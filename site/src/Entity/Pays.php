@@ -5,10 +5,14 @@ namespace App\Entity;
 use App\Repository\PaysRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+// (Evan) Doctrine, entité (une table)
+// lien avec le repository (pour requête).
 #[ORM\Entity(repositoryClass: PaysRepository::class)]
+// (Evan) force "proj_pays" comme nom de table
 #[ORM\Table(name: 'proj_pays')]
 class Pays
 {
+    // (Evan) Clé primaire et auto-incrémente (GeneratedValue).
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

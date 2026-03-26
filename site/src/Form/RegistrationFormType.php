@@ -16,6 +16,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegistrationFormType extends AbstractType
 {
+    // (Evan) buildForm construit chaque champ du form
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -25,6 +26,7 @@ class RegistrationFormType extends AbstractType
             ->add('date_naissance', null, [
                 'widget' => 'single_text',
             ])
+            // (Evan) EntityType  interroger la BDD et générer <select> avec toutes les <option>.
             ->add('pays', EntityType::class, [
                 'class' => Pays::class,
                 'choice_label' => 'nom',
@@ -33,6 +35,7 @@ class RegistrationFormType extends AbstractType
                 'required' => true,
             ])
             ->add('agreeTerms', CheckboxType::class, [
+                // (Evan) 'mapped' => false, pas de save dans la bdd
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue(
@@ -41,19 +44,19 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
             ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
+                // (Evan) 'mapped' => false pareil qu'avant
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
+                    // (Evan) pas de mdp vide
                     new NotBlank(
                         message: 'Please enter a password',
                     ),
                     new Length(
-                        min: 6,
+                        min: 3,
                         minMessage: 'Your password should be at least {{ limit }} characters',
                         // max length allowed by Symfony for security reasons
-                        max: 4096,
+                        max: 30,
                     ),
                 ],
             ])
@@ -62,6 +65,7 @@ class RegistrationFormType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        // (Evan) lié qu'à User le form
         $resolver->setDefaults([
             'data_class' => User::class,
         ]);

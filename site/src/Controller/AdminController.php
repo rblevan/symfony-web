@@ -16,9 +16,11 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AdminController extends AbstractController
 {
     // pour ajouter un produit
+    // (Evan) EntityManagerInterface est injecté automatiquement par Symfony (INSERT, DELETE, ect)
     #[Route('/produit/ajouter', name: 'produit_add')]
     public function addProduct(Request $request, EntityManagerInterface $em): Response
     {
+        // (Evan) Sécurité métier : caché twig
         if (!$this->isGranted('ROLE_ADMIN')) {
             $this->addFlash('danger', 'Accès refusé. Vous devez être administrateur.');
             return $this->redirectToRoute('app_accueil');
@@ -26,6 +28,8 @@ final class AdminController extends AbstractController
 
         $produit = new Product();
         $form = $this->createForm(ProductType::class, $produit);
+
+        // (Evan) handleRequest intercepte la requête HTTP (le $_POST) -> $produit
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -70,6 +74,8 @@ final class AdminController extends AbstractController
             $this->addFlash('danger', 'Impossible de supprimer un Super-Administrateur.');
             return $this->redirectToRoute('app_admin_clients');
         }
+
+        // (Evan) Vérif du jeton CSRF. Empeche n'importe qui de delete
         if ($this->isCsrfTokenValid('delete'.$client->getId(), $request->request->get('_token'))) {
             $em->remove($client);
             $em->flush();
