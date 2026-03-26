@@ -15,9 +15,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'proj_user')]
+// (Evan) contrainte unique login
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_LOGIN', fields: ['login'])]
 #[ORM\UniqueConstraint(name: 'UNIQ_NOM_PRENOM', fields: ['nom', 'prenom'])]
+// (Evan) (form) verif si nom/prenom existe si error
 #[UniqueEntity(fields: ['nom', 'prenom'], message: 'Un utilisateur avec ce nom et ce prénom existe déjà.')]
+
+// (Evan) Sécurité de Symfony pour connexion
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -31,6 +35,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var list<string> The user roles
      */
+    // (Evan) stocke les roles via doctrine
     #[ORM\Column]
     private array $roles = [];
 
@@ -58,6 +63,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
+        // (Evan) init de type ArrayCollection obj spé de doctrine
         $this->paniers = new ArrayCollection();
     }
 

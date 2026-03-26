@@ -12,10 +12,8 @@ class LoginController extends AbstractController
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // get the login error if there is one
+        // (Evan) AuthenticationUtils (Symfony) pour recup dernier nom si mauvais mdp
         $error = $authenticationUtils->getLastAuthenticationError();
-
-        // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('login/login.html.twig', [
@@ -27,6 +25,7 @@ class LoginController extends AbstractController
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {
+        // (Evan) vide exprès c'est dans security.yaml qui intercepte et detruit la session
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 

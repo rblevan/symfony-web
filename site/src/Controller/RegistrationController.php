@@ -22,17 +22,17 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // (Evan) (plainPassword) recup dans le form mais pas lié a la table user
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
 
-            // encode the plain password
+            // (Evan) hashage avant de le mettre dans les champs de user
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // do anything else you need here, like send an email
-
+            // (Evan) authentification direct après création de compte
             return $security->login($user, 'form_login', 'main');
         }
 
