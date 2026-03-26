@@ -2,7 +2,7 @@
 {% extends 'layout/base_globale.html.twig' %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/site.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/site.css') }}"> {# Feuille CSS Niveau 2  #}
 {% endblock %}
 
 {% block body %}
@@ -25,19 +25,24 @@
             <li><a href="{{ path('app_accueil') }}">Accueil</a></li>
 
             {% if not app.user %}
+                {# 1. NON AUTHENTIFIÉ #}
                 <li><a href="{{ path('app_login') }}">Connexion</a></li>
                 <li><a href="{{ path('app_register') }}">Créer un compte</a></li>
 
             {% else %}
+                {# BLOC POUR TOUS LES UTILISATEURS CONNECTÉS #}
                 <li><a href="{{ path('app_profile') }}">Gérer le profil</a></li>
                 <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
 
                 {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    {# 2. SUPER-ADMINISTRATEUR (Gestion des admins uniquement) #}
                     <li><a href="{{ path('app_sadmin_manage_admins') }}">Gérer les administrateurs</a></li>
 
                 {% else %}
+                    {# 3. CLIENT ET ADMINISTRATEUR (Partie commune) #}
                     <li><a href="{{ path('app_produits') }}">Liste de produits</a></li>
 
+                    {# Calcul du panier (Somme des quantités m+n) #}
                     {% set nbr_total = 0 %}
                     {% for ligne in app.user.paniers %}
                         {% set nbr_total = nbr_total + ligne.quantite %}
@@ -45,6 +50,7 @@
                     <li><a href="{{ path('app_panier') }}">Gérer le panier <strong>({{ nbr_total }})</strong></a></li>
 
                     {% if is_granted('ROLE_ADMIN') %}
+                        {# 4. ADMINISTRATEUR UNIQUEMENT (Droits client + gestion clients) #}
                         <li style="border-top: 1px solid #ccc; margin-top: 5px;"><strong>Espace Admin</strong></li>
                         <li><a href="{{ path('app_admin_manage_clients') }}">Gérer les clients</a></li>
                         <li><a href="{{ path('app_admin_produit_add') }}">Ajouter un produit</a></li>
@@ -63,7 +69,7 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer style="position: fixed; bottom: 0; width: 100%;">
-        <img src="{{ asset('images/footer.jpg') }}" alt="Logo" style="max-height: 50px;"> {# Image < 50 Ko  #}
+    <footer style="position: fixed; bottom: 0; width: 100%;"> {# Pied de page fixe #}
+        <img src="{{ asset('images/footer_test.png') }}" alt="Logo" style="max-height: 50px;"> {# Image < 50 Ko  #}
     </footer>
 {% endblock %}
