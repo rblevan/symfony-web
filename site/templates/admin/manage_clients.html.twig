@@ -1,0 +1,54 @@
+{% extends 'layout/site_layout.html.twig' %}
+
+{% block content %}
+    <h1>Gestion des Clients</h1>
+    {% for message in app.flashes('danger') %}
+        <div style="color: red; padding: 10px; border: 1px solid red; margin-bottom: 15px;">{{ message }}</div>
+    {% endfor %}
+
+    <table border="1" style="width: 100%; border-collapse: collapse; text-align: left; background: #fff;">
+        <thead style="background: #eee;">
+        <tr>
+            <th style="padding: 10px;">ID</th>
+            <th style="padding: 10px;">Login</th>
+            <th style="padding: 10px;">Nom complet</th>
+            <th style="padding: 10px;">Pays</th>
+            <th style="padding: 10px;">Rôle</th>
+            <th style="padding: 10px;">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for client in users %}
+            <tr>
+                <td style="padding: 10px;">{{ client.id }}</td>
+                <td style="padding: 10px;">{{ client.login }}</td>
+                <td style="padding: 10px;">{{ client.prenom }} {{ client.nom }}</td>
+                <td style="padding: 10px;">{{ client.pays ? client.pays.nom : 'Non renseigné' }}</td>
+                <td style="padding: 10px;">
+                    {% if 'ROLE_SUPER_ADMIN' in client.roles %}
+                        <strong style="color: purple;">Super Admin</strong>
+                    {% elseif 'ROLE_ADMIN' in client.roles %}
+                        <strong style="color: blue;">Admin</strong>
+                    {% else %}
+                        Client
+                    {% endif %}
+                </td>
+                <td style="padding: 10px;">
+                    {% if client.id == app.user.id %}
+                        <span style="color: gray;">C'est vous</span>
+                    {% elseif 'ROLE_SUPER_ADMIN' in client.roles %}
+                        <span style="color: gray;">Intouchable</span>
+                    {% else %}
+                        <form method="post" action="{{ path('app_admin_client_delete', {'id': client.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer {{ client.prenom }} ? Cette action est irréversible.');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ client.id) }}">
+                            <button type="submit" style="background: red; color: white; border: none; padding: 5px 10px; cursor: pointer;">
+                                Supprimer
+                            </button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
