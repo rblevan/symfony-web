@@ -1,0 +1,38 @@
+{% extends 'layout/site_layout.html.twig' %}
+
+{% block title %}Créer un Administrateur{% endblock %}
+
+{% block content %}
+    <h1>Espace Super-Administrateur</h1>
+    <h2>Créer un nouveau compte Administrateur</h2>
+
+    <div style="max-width: 500px; margin-top: 20px; padding: 20px; border: 1px solid #ccc; background: #f9f9f9;">
+        {{ form_start(registrationForm) }}
+
+        <div style="margin-bottom: 10px;">
+            {{ form_row(registrationForm.login, {'label': 'Identifiant (Login)'}) }}
+        </div>
+
+        <div style="margin-bottom: 10px;">
+            {{ form_row(registrationForm.nom) }}
+        </div>
+
+        <div style="margin-bottom: 10px;">
+            {{ form_row(registrationForm.prenom) }}
+        </div>
+
+        <div style="margin-bottom: 10px;">
+            {{ form_row(registrationForm.plainPassword, {'label': 'Mot de passe'}) }}
+        </div>
+
+        {# On n'affiche pas les rôles ici car le contrôleur les force en ROLE_ADMIN #}
+
+        <button type="submit" style="padding: 10px 20px; background: #4CAF50; color: white; border: none; cursor: pointer;">
+            Enregistrer l'Administrateur
+        </button>
+
+        <a href="{{ path('app_sadmin_manage_admins') }}" style="margin-left: 10px;">Annuler</a>
+
+        {{ form_end(registrationForm) }}
+    </div>
+{% endblock %}

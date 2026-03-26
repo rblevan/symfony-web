@@ -1,0 +1,46 @@
+
+{% extends 'layout/site_layout.html.twig' %}
+
+{% block title %}Gestion des Administrateurs{% endblock %}
+
+{% block content %}
+    <h1>Espace Super-Administrateur</h1>
+    <h2>Liste des Administrateurs</h2>
+
+    <div style="margin-bottom: 20px;">
+        <a href="{{ path('app_sadmin_add_admin') }}" style="padding: 10px; background: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">
+            + Créer un nouvel administrateur
+        </a>
+    </div>
+
+    <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead style="background: #ddd;">
+        <tr>
+            <th style="padding: 10px;">Nom</th>
+            <th style="padding: 10px;">Prénom</th>
+            <th style="padding: 10px;">Login</th>
+            <th style="padding: 10px;">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for admin in admins %}
+            <tr>
+                <td style="padding: 10px;">{{ admin.nom }}</td>
+                <td style="padding: 10px;">{{ admin.prenom }}</td>
+                <td style="padding: 10px;">{{ admin.login }}</td>
+                <td style="padding: 10px;">
+                    <a href="{{ path('app_sadmin_demote_admin', {'id': admin.id}) }}"
+                       onclick="return confirm('Retirer les droits admin à cet utilisateur ?')"
+                       style="color: red;">
+                        Désactiver (Rétrograder)
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4" style="padding: 10px; text-align: center;">Aucun administrateur trouvé.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
